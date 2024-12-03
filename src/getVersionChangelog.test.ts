@@ -16,4 +16,14 @@ describe('getVersionChangelog', () => {
       getVersionChangelog('./src/fixtures/CHANGELOG.fixture.md', 'v1.1.1');
     }).toThrowError('Version v1.1.1 not found in changelog');
   });
+  it('should throw error if changelog can not be parsed', () => {
+    expect(() => {
+      getVersionChangelog(
+        './src/fixtures/CHANGELOG_CORRUPTED.fixture.md',
+        'v1.1.1'
+      );
+    }).toThrowError(
+      `Unable to parse changelog. Parser error: Cannot read properties of undefined (reading '0')`
+    );
+  });
 });

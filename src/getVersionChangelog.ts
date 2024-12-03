@@ -5,12 +5,18 @@ export function getVersionChangelog(
   changelogPath: string,
   version: string
 ): string {
-  const changelog = parser(fs.readFileSync(changelogPath, 'utf8'));
-  const release = changelog.findRelease(version);
-
-  if (!release) {
-    throw new Error(`Version ${version} not found in changelog`);
+  try {
+    const changelog = parser(fs.readFileSync(changelogPath, 'utf8'));
+    const release = changelog.findRelease(version);
+    if (!release) {
+      throw new Error(`Version ${version} not found in changelog`);
+    }
+    return release.toString();
+  } catch (err) {
+    if (err instanceof Error) {
+      throw Error(`Unable to parse changelog. Parser error: ${err.message}`);
+    } else {
+      throw Error('Unable to parse changelog.');
+    }
   }
-
-  return release.toString();
 }
